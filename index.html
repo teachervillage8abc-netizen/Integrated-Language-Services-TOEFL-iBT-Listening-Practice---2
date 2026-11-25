@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOEFL iBT Listening Practice - 2 | Integrated Language Services</title>
+<style>
+:root{--ink:#1b2a3a;--mut:#5b6b7b;--bg:#f3f5f8;--card:#fff;--line:#d5dce4;--navy:#14304f;--blue:#1f5f99;--ok:#1d7a4d;--bad:#b3322e;--warn:#b3322e}
+@media(prefers-color-scheme:dark){:root{--ink:#e6ebf1;--mut:#9aa8b6;--bg:#0f1720;--card:#17212c;--line:#2b3947;--navy:#0b1b2e;--blue:#6aa8e3;--ok:#4cc38a;--bad:#ef7b77;--warn:#ef7b77}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+header{background:var(--navy);color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;position:sticky;top:0;z-index:5}
+header .org{font:600 15px Georgia,serif;letter-spacing:.2px}
+header .ttl{font-size:13px;opacity:.8}
+#timer{font:600 22px/1 "Consolas","Courier New",monospace;padding:8px 12px;border:1px solid rgba(255,255,255,.35);border-radius:4px;min-width:84px;text-align:center}
+#timer.low{background:var(--warn);border-color:var(--warn)}
+#timer.hide{visibility:hidden}
+main{max-width:820px;margin:28px auto;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:28px}
+h1,h2{font-family:Georgia,serif;margin:0 0 12px;color:var(--ink)}
+h1{font-size:28px}h2{font-size:21px}
+p{margin:0 0 12px}.mut{color:var(--mut)}
+ul.rules{padding-left:20px;margin:0 0 18px}ul.rules li{margin-bottom:6px}
+input[type=text]{width:100%;max-width:340px;padding:10px;border:1px solid var(--line);border-radius:4px;font:inherit;background:var(--bg);color:var(--ink)}
+button{font:600 15px inherit;font-family:inherit;padding:11px 22px;border-radius:4px;border:1px solid var(--blue);background:var(--blue);color:#fff;cursor:pointer}
+@media(prefers-color-scheme:dark){button{color:#0b1b2e}}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.ghost{background:transparent;color:var(--blue)}
+button:focus-visible,input:focus-visible{outline:3px solid #f2b84b;outline-offset:2px}
+.meta{display:flex;justify-content:space-between;font-size:14px;color:var(--mut);margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;border:1px solid var(--line);border-radius:4px;margin-bottom:8px;cursor:pointer}
+.opt:hover{border-color:var(--blue)}
+.opt input{margin-top:5px}
+.q{font-size:18px;margin-bottom:6px;font-weight:600}
+.dir{font-style:italic;color:var(--mut);margin-bottom:14px}
+table{width:100%;border-collapse:collapse;margin:8px 0 4px}
+th,td{border:1px solid var(--line);padding:9px;text-align:center;font-size:14px}
+th{background:var(--navy);color:#fff;font-weight:600}td:first-child,th:first-child{text-align:left}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:18px 0}
+.bar i{display:block;height:100%;width:0;background:var(--blue)}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:20px;gap:12px}
+.score{font:700 44px Georgia,serif}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.skill{display:grid;grid-template-columns:200px 1fr 60px;gap:10px;align-items:center;margin:6px 0;font-size:14px}
+.skill .bar{margin:0}
+.rev{border-top:1px solid var(--line);padding:10px 0;font-size:14px}
+@media print{header,.noprint{display:none}}
+@media(max-width:560px){.skill{grid-template-columns:1fr}header{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="org">Integrated Language Services</div><div class="ttl">TOEFL iBT Listening Practice - 2</div></div>
+  <div id="timer" class="hide" aria-live="off">00:00</div>
+</header>
+<main id="app"></main>
+<audio id="au" preload="auto"></audio>
+<script>
+/* ===== CONFIGURATION ===== */
+const AUDIO_BASE = "audio/";      // folder in your GitHub repo that holds the mp3 files
+const SECONDS_PER_QUESTION = 60;  // answering time per question (starts when the audio ends)
+const trk = n => encodeURI(AUDIO_BASE + "ETS - Track " + String(n).padStart(2,"0") + ".mp3");
+
+/* ===== CONTENT (Practice Sets 1-5) ===== */
+const SETS = [
+ {title:"Set 1", kind:"Conversation", narr:"Listen to a conversation between a student and a professor.", audio:1, qs:[
+  {k:"Gist-Purpose", t:"mc", p:"Why does the man go to see his professor?", o:["To borrow some charts and graphs from her","To ask her to explain some statistical procedures","To talk about a report he is writing","To discuss a grade he got on a paper"], a:2},
+  {k:"Understanding Function", t:"mc", r:2, p:"Listen again to part of the conversation. Then answer the question. Why does the professor say this?", o:["To question the length of the paper","To offer encouragement","To dispute the data sources","To explain a theory"], a:1},
+  {k:"Connecting Content", t:"tbl", p:"What information will the man include in his report?", d:"For each phrase below, select the \u201cInclude\u201d or the \u201cNot include\u201d column.", cols:["Include in report","Not include in report"], rows:["Climate charts","Interviews with meteorologists","Journal notes","Statistical tests"], a:[0,1,0,0]},
+  {k:"Understanding Function", t:"mc", p:"Why does the professor tell the man about the appointment at the doctor\u2019s office?", o:["To demonstrate a way of remembering things","To explain why she needs to leave soon","To illustrate a point that appears in his report","To emphasize the importance of good health"], a:0},
+  {k:"Detail", t:"mc", p:"What does the professor offer to do for the man?", o:["Help him collect more data in other areas of the state","Submit his research findings for publication","Give him the doctor\u2019s telephone number","Review the first version of his report"], a:3}
+ ]},
+ {title:"Set 2", kind:"Lecture", narr:"Listen to part of a lecture in a philosophy class.", audio:3, qs:[
+  {k:"Gist-Purpose", t:"mc", p:"What is the main purpose of the lecture?", o:["To illustrate the importance of extrinsic values","To explain Aristotle\u2019s views about the importance of teaching","To explain why people change what they value","To discuss Aristotle\u2019s views about human happiness"], a:3},
+  {k:"Connecting Content", t:"tbl", w:2, p:"The professor gives examples of things that have value for her. Indicate for each example what type of value it has for her.", d:"Select the correct column for each row. This question is worth 2 points.", cols:["Only extrinsic value","Only intrinsic value","Both extrinsic and intrinsic value"], rows:["Teaching","Exercise","Health","Playing a musical instrument"], a:[1,0,2,1]},
+  {k:"Detail", t:"mc", p:"Why is happiness central to Aristotle\u2019s theory?", o:["Because it is so difficult for people to attain","Because it is valued for its own sake by all people","Because it is a means to a productive life","Because most people agree about what happiness is"], a:1},
+  {k:"Detail", t:"mc", p:"According to the professor, why does Aristotle think that fame cannot provide true happiness?", o:["Fame cannot be obtained without help from other people.","Fame cannot be obtained by all people.","Fame does not last forever.","People cannot share their fame with other people."], a:0},
+  {k:"Understanding Function", t:"mc", r:4, p:"Listen again to part of the lecture. Then answer the question. What does the professor imply?", o:["Teaching is not a highly valued profession in society.","She may change professions in order to earn more money.","The reason she is a teacher has little to do with her salary.","More people would become teachers if the salary were higher."], a:2}
+ ]},
+ {title:"Set 3", kind:"Lecture", narr:"Listen to part of a psychology lecture. The professor is discussing behaviorism.", audio:5, qs:[
+  {k:"Gist-Content", t:"mc", p:"What is the professor mainly discussing?", o:["The development of motor skills in children","How psychologists measure muscle activity in the throat","A theory about the relationship between muscle activity and thinking","A study on deaf people\u2019s problem-solving techniques"], a:2},
+  {k:"Understanding Function", t:"mc", r:6, p:"Listen again to part of the lecture. Then answer the question. Why does the professor say this?", o:["To give an example of a laryngeal habit","To explain the meaning of a term","To explain why he is discussing laryngeal habits","To remind students of a point he had discussed previously"], a:1},
+  {k:"Detail", t:"mc", p:"What does the professor say about people who use sign language?", o:["It is not possible to study their thinking habits.","They exhibit laryngeal habits.","The muscles in their hands move when they solve problems.","They do not exhibit ideomotor action."], a:2},
+  {k:"Understanding Organization", t:"mc", p:"What point does the professor make when he refers to the university library?", o:["A study on problem solving took place there.","Students should go there to read more about behaviorism.","Students\u2019 eyes will turn toward it if they think about it.","He learned about William James\u2019s concept of thinking there."], a:2},
+  {k:"Connecting Content", t:"mc", p:"The professor describes a magic trick to the class. What does the magic trick demonstrate?", o:["An action people make that they are not aware of","That behaviorists are not really scientists","How psychologists study children","A method for remembering locations"], a:0},
+  {k:"Understanding Attitude", t:"mc", p:"What is the professor\u2019s opinion of the motor theory of thinking?", o:["Most of the evidence he has collected contradicts it.","It explains adult behavior better than it explains child behavior.","It is the most valid theory of thinking at the present time.","It cannot be completely proved or disproved."], a:3}
+ ]},
+ {title:"Set 4", kind:"Lecture", narr:"Listen to part of a lecture in an astronomy class. You will not need to remember the numbers the professor mentions.", audio:7, qs:[
+  {k:"Detail", t:"mc", p:"What is Bode\u2019s Law?", o:["A law of gravitation","An estimate of the distance between Mars and Jupiter","A prediction of how many asteroids there are","A pattern in the spacing of the planets"], a:3},
+  {k:"Gist-Purpose", t:"mc", p:"Why does the professor explain Bode\u2019s Law to the class?", o:["To describe the size of the asteroids","To explain how the asteroid belt was discovered","To explain how gravitational forces influence the planets","To describe the impact of telescopes on astronomy"], a:1},
+  {k:"Understanding Organization", t:"mc", p:"How does the professor introduce Bode\u2019s Law?", o:["By demonstrating how it is derived mathematically","By describing the discovery of Uranus","By drawing attention to the inaccuracy of a certain pattern","By telling the names of several of the asteroids"], a:0},
+  {k:"Understanding Function", t:"mc", r:8, p:"Listen again to part of the lecture. Then answer the question. Why does the professor say this?", o:["To introduce an alternative application of Bode\u2019s Law","To give an example of what Bode\u2019s Law cannot explain","To describe the limitations of gravitational theory","To contrast Bode\u2019s Law with a real scientific law"], a:3},
+  {k:"Detail", t:"multi", p:"According to the professor, what two factors contributed to the discovery of the asteroid Ceres?", d:"Choose 2 answers.", o:["Improved telescopes","Advances in mathematics","The discovery of a new star","The position of Uranus in a pattern"], a:[0,3]},
+  {k:"Making Inferences", t:"mc", p:"What does the professor imply about the asteroid belt?", o:["It is farther from the Sun than Uranus.","Bode believed it was made up of small stars.","It is located where people expected to find a planet.","Ceres is the only one of the asteroids that can be seen without a telescope."], a:2}
+ ]},
+ {title:"Set 5", kind:"Lecture", narr:"Listen to part of a lecture from a Botany class.", audio:9, qs:[
+  {k:"Gist-Content", t:"mc", p:"What aspect of Manila hemp fibers does the professor mainly discuss in the lecture?", o:["Similarities between cotton fibers and Manila hemp fibers","Various types of Manila hemp fibers","The economic importance of Manila hemp fibers","A use of Manila hemp fibers"], a:3},
+  {k:"Understanding Function", t:"mc", r:10, p:"Listen again to part of the lecture. Then answer the question. Why does the professor say this?", o:["To tell the class a joke","To apologize for not completing some work","To introduce the topic of the lecture","To encourage students to ask about her trip"], a:1},
+  {k:"Making Inferences", t:"mc", p:"What does the professor imply about the name \u201cManila hemp\u201d?", o:["It is a commercial brand name.","Part of the name is inappropriate.","The name has recently changed.","The name was first used in the 1940\u2019s."], a:1},
+  {k:"Understanding Organization", t:"mc", p:"Why does the professor mention the Golden Gate Bridge?", o:["To demonstrate a disadvantage of steel cables","To give an example of the creative use of color","To show that steel cables are able to resist salt water","To give an example of a use of Manila hemp"], a:0},
+  {k:"Detail", t:"mc", p:"According to the professor, what was the main reason that many ships used Manila hemp ropes instead of steel cables?", o:["Manila hemp was cheaper.","Manila hemp was easier to produce.","Manila hemp is more resistant to salt water.","Manila hemp is lighter in weight."], a:2},
+  {k:"Detail", t:"multi", p:"According to the lecture, what are two ways to increase the strength of rope made from Manila hemp fibers?", d:"Choose 2 answers.", o:["Coat the fibers with zinc-based paint","Combine the fibers into bundles","Soak bundles of fibers in salt water","Twist bundles of fibers"], a:[1,3]}
+ ]}
+];
+
+/* ===== STATE ===== */
+const app = document.getElementById("app"), au = document.getElementById("au"), tm = document.getElementById("timer");
+let si = 0, qi = 0, ans = {}, name = "", endAt = 0, tick = null, replayUsed = {};
+const key = (s,q) => s + "-" + q;
+const mmss = s => String(Math.floor(s/60)).padStart(2,"0") + ":" + String(s%60).padStart(2,"0");
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* ===== SCREENS ===== */
+function intro(){
+  tm.className = "hide";
+  const total = SETS.reduce((n,s)=>n+s.qs.length,0);
+  app.innerHTML = `<div class="card">
+   <h1>TOEFL iBT Listening Practice - 2</h1>
+   <p class="mut">${SETS.length} listening sets \u00b7 ${total} questions \u00b7 about ${Math.round(total*SECONDS_PER_QUESTION/60)} minutes of answering time plus the audio</p>
+   <h2>Directions</h2>
+   <ul class="rules">
+    <li>Use headphones. Each recording plays <b>one time only</b>. You cannot pause or replay it.</li>
+    <li>Take notes on paper while you listen. Notes are allowed on the test.</li>
+    <li>Questions appear after the recording ends. A countdown timer starts at that moment.</li>
+    <li>You cannot go back to a previous question. When time runs out, the set closes automatically.</li>
+    <li>Some questions replay a short part of the recording. That excerpt also plays once.</li>
+   </ul>
+   <p><label for="nm"><b>Student name</b></label><br><input id="nm" type="text" autocomplete="name" value="${esc(name)}"></p>
+   <button id="go">Start test</button></div>`;
+  document.getElementById("go").onclick = () => { name = document.getElementById("nm").value.trim(); si = 0; ans = {}; replayUsed = {}; ready(); };
+}
+
+function ready(){
+  tm.className = "hide"; const s = SETS[si];
+  app.innerHTML = `<div class="card"><div class="meta"><span>${s.title} of ${SETS.length}</span><span>${s.qs.length} questions</span></div>
+   <h2>${s.kind}</h2><p>${esc(s.narr)}</p>
+   <p class="mut">You will have ${mmss(s.qs.length*SECONDS_PER_QUESTION)} to answer after the recording ends.</p>
+   <button id="go">Play recording</button></div>`;
+  document.getElementById("go").onclick = listen;
+}
+
+function listen(){
+  const s = SETS[si];
+  app.innerHTML = `<div class="card"><div class="meta"><span>${s.title} of ${SETS.length}</span><span>${s.kind}</span></div>
+   <h2>Listening\u2026</h2><p class="mut">Take notes. The questions will appear when the recording ends.</p>
+   <div class="bar"><i id="pg"></i></div><p id="err" class="bad"></p></div>`;
+  playOnce(s.audio, p => { const e = document.getElementById("pg"); if(e) e.style.width = (p*100)+"%"; }, startQuestions,
+    () => { document.getElementById("err").innerHTML = "The audio could not load from <b>" + esc(trk(s.audio)) + "</b>. Check the AUDIO_BASE setting and file names, then reload."; });
+}
+
+function playOnce(n, onProg, onEnd, onErr){
+  au.onended = au.ontimeupdate = au.onerror = null;
+  au.src = trk(n);
+  au.ontimeupdate = () => au.duration && onProg && onProg(au.currentTime/au.duration);
+  au.onended = () => { onProg && onProg(1); onEnd && onEnd(); };
+  au.onerror = () => onErr && onErr();
+  au.play().catch(() => onErr && onErr());
+}
+
+function startQuestions(){
+  qi = 0; endAt = Date.now() + SETS[si].qs.length*SECONDS_PER_QUESTION*1000;
+  tm.className = ""; clearInterval(tick); tick = setInterval(upd, 250); upd(); question();
+}
+function upd(){
+  const left = Math.max(0, Math.ceil((endAt-Date.now())/1000));
+  tm.textContent = mmss(left); tm.classList.toggle("low", left <= 60);
+  if(left === 0){ clearInterval(tick); au.pause(); nextSet(); }
+}
+
+function question(){
+  const s = SETS[si], q = s.qs[qi], k = key(si,qi), a = ans[k];
+  let body = "";
+  if(q.t === "tbl"){
+    body = `<table><tr><th></th>${q.cols.map(c=>`<th>${c}</th>`).join("")}</tr>` +
+      q.rows.map((r,i)=>`<tr><td>${r}</td>${q.cols.map((c,j)=>`<td><input type="radio" name="r${i}" data-r="${i}" value="${j}" aria-label="${esc(r)}: ${esc(c)}" ${a&&a[i]===j?"checked":""}></td>`).join("")}</tr>`).join("") + "</table>";
+  } else {
+    const type = q.t === "multi" ? "checkbox" : "radio";
+    body = q.o.map((o,i)=>`<label class="opt"><input type="${type}" name="o" value="${i}" ${(q.t==="multi"?(a||[]).includes(i):a===i)?"checked":""}><span>${esc(o)}</span></label>`).join("");
+  }
+  const last = qi === s.qs.length-1;
+  app.innerHTML = `<div class="card"><div class="meta"><span>${s.title} \u00b7 Question ${qi+1} of ${s.qs.length}</span><span>${s.kind}</span></div>
+   ${q.r ? `<p><button id="rp" class="ghost">Play excerpt</button> <span class="mut">Plays once.</span></p>` : ""}
+   <div class="q">${esc(q.p)}</div>${q.d ? `<div class="dir">${esc(q.d)}</div>` : ""}${body}
+   <div class="row"><span class="mut">You cannot return to this question.</span><button id="nx">${last?"Finish set":"Next"}</button></div></div>`;
+  if(q.r){
+    const b = document.getElementById("rp");
+    const go = () => { if(replayUsed[k]) return; replayUsed[k] = 1; b.disabled = true; b.textContent = "Playing\u2026";
+      playOnce(q.r, null, () => b.textContent = "Played", () => { replayUsed[k] = 0; b.disabled = false; b.textContent = "Play excerpt"; }); };
+    b.onclick = go; if(!replayUsed[k]) go();
+  }
+  app.querySelectorAll("input").forEach(el => el.onchange = () => {
+    if(q.t === "tbl"){ ans[k] = ans[k] || {}; ans[k][+el.dataset.r] = +el.value; }
+    else if(q.t === "multi"){ const c = [...app.querySelectorAll("input:checked")]; if(c.length > 2){ el.checked = false; return; } ans[k] = c.map(x=>+x.value).sort(); }
+    else ans[k] = +el.value;
+  });
+  document.getElementById("nx").onclick = () => { au.pause(); if(last){ clearInterval(tick); nextSet(); } else { qi++; question(); } };
+}
+function nextSet(){ au.pause(); if(si < SETS.length-1){ si++; ready(); } else results(); }
+
+/* ===== SCORING ===== */
+function score(q, a){
+  if(a == null) return 0; const w = q.w || 1;
+  if(q.t === "mc") return a === q.a ? 1 : 0;
+  if(q.t === "multi") return JSON.stringify([...a].sort()) === JSON.stringify(q.a) ? 1 : 0;
+  return w * q.a.filter((c,i)=>a[i]===c).length / q.a.length;
+}
+function corrText(q){
+  if(q.t === "mc") return q.o[q.a];
+  if(q.t === "multi") return q.a.map(i=>q.o[i]).join("; ");
+  return q.rows.map((r,i)=>r+" \u2192 "+q.cols[q.a[i]]).join("; ");
+}
+function results(){
+  tm.className = "hide"; let got = 0, max = 0; const skills = {}; let rev = "";
+  SETS.forEach((s,i)=>{ let sg = 0, sm = 0; let rows = "";
+    s.qs.forEach((q,j)=>{ const p = score(q, ans[key(i,j)]), m = q.w || 1; sg += p; sm += m;
+      const t = skills[q.k] = skills[q.k] || {g:0,m:0}; t.g += p; t.m += m;
+      rows += `<div class="rev"><b class="${p===m?"ok":"bad"}">${p===m?"Correct":p>0?"Partial":ans[key(i,j)]==null?"No answer":"Incorrect"}</b> \u00b7 Q${j+1} \u00b7 <span class="mut">${q.k}</span><br>${p===m?"":"Correct answer: "+esc(corrText(q))}</div>`; });
+    got += sg; max += sm;
+    rev += `<h2 style="margin-top:22px">${s.title}: ${+sg.toFixed(1)} / ${sm}</h2>${rows}`; });
+  const pct = Math.round(got/max*100);
+  const sk = Object.entries(skills).sort((a,b)=>a[1].g/a[1].m-b[1].g/b[1].m).map(([k,v])=>{ const r = Math.round(v.g/v.m*100);
+    return `<div class="skill"><span>${k}</span><div class="bar"><i style="width:${r}%"></i></div><span>${r}%</span></div>`; }).join("");
+  app.innerHTML = `<div class="card"><h1>Results${name?" \u2013 "+esc(name):""}</h1>
+   <div class="score">${+got.toFixed(1)} / ${max} <span class="mut" style="font-size:22px">(${pct}%)</span></div>
+   <p class="mut">${new Date().toLocaleDateString()} \u00b7 Raw practice score, not an official TOEFL score.</p>
+   <h2 style="margin-top:22px">Performance by question type</h2><p class="mut">Lowest first. Use this to choose what to reteach.</p>${sk}
+   ${rev}<div class="row noprint"><button class="ghost" onclick="window.print()">Print results</button><button onclick="intro()">Start over</button></div></div>`;
+  window.scrollTo(0,0);
+}
+intro();
+</script>
+</body>
+</html>
