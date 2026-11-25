@@ -14,7 +14,8 @@ header .org{font:600 15px Georgia,serif;letter-spacing:.2px}
 header .ttl{font-size:13px;opacity:.8}
 #timer{font:600 22px/1 "Consolas","Courier New",monospace;padding:8px 12px;border:1px solid rgba(255,255,255,.35);border-radius:4px;min-width:84px;text-align:center}
 #timer.low{background:var(--warn);border-color:var(--warn)}
-#timer.hide{visibility:hidden}
+#timer.hide,#timer.hide+#tl{visibility:hidden}
+#tl{font-size:11px;opacity:.8;margin-top:4px}
 main{max-width:820px;margin:28px auto;padding:0 16px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:28px}
 h1,h2{font-family:Georgia,serif;margin:0 0 12px;color:var(--ink)}
@@ -51,15 +52,16 @@ th{background:var(--navy);color:#fff;font-weight:600}td:first-child,th:first-chi
 <body>
 <header>
   <div><div class="org">Integrated Language Services</div><div class="ttl">TOEFL iBT Listening Practice - 2</div></div>
-  <div id="timer" class="hide" aria-live="off">00:00</div>
+  <div style="text-align:center"><div id="timer" class="hide" aria-live="off">00:00</div><div id="tl"></div></div>
 </header>
 <main id="app"></main>
 <audio id="au" preload="auto"></audio>
 <script>
 /* ===== CONFIGURATION ===== */
-const AUDIO_BASE = "audio/";      // folder in your GitHub repo that holds the mp3 files
+const AUDIO_BASE = "";            // folder of the mp3 files ("" = same folder as index.html). If a file is not found, the app also tries "Audio/" and "audio/".
 const SECONDS_PER_QUESTION = 60;  // answering time per question (starts when the audio ends)
-const trk = n => encodeURI(AUDIO_BASE + "ETS - Track " + String(n).padStart(2,"0") + ".mp3");
+const BASES = [AUDIO_BASE, "Audio/", "audio/"]; let bi = 0;
+const trk = (n,b) => encodeURI((b===undefined?BASES[bi]:b) + "ETS - Track " + String(n).padStart(2,"0") + ".mp3");
 
 /* ===== CONTENT (Practice Sets 1-5) ===== */
 const SETS = [
@@ -144,22 +146,23 @@ function listen(){
   app.innerHTML = `<div class="card"><div class="meta"><span>${s.title} of ${SETS.length}</span><span>${s.kind}</span></div>
    <h2>Listening\u2026</h2><p class="mut">Take notes. The questions will appear when the recording ends.</p>
    <div class="bar"><i id="pg"></i></div><p id="err" class="bad"></p></div>`;
-  playOnce(s.audio, p => { const e = document.getElementById("pg"); if(e) e.style.width = (p*100)+"%"; }, startQuestions,
-    () => { document.getElementById("err").innerHTML = "The audio could not load from <b>" + esc(trk(s.audio)) + "</b>. Check the AUDIO_BASE setting and file names, then reload."; });
+  tm.className = ""; tm.classList.remove("low"); tm.textContent = "--:--"; document.getElementById("tl").textContent = "Recording time left";
+  playOnce(s.audio, (p,a) => { const e = document.getElementById("pg"); if(e) e.style.width = (p*100)+"%"; if(a && a.duration) tm.textContent = mmss(Math.max(0,Math.ceil(a.duration-a.currentTime))); }, startQuestions,
+    () => { const e = document.getElementById("err"); if(e) e.innerHTML = "The audio could not load. Looked for <b>" + esc(decodeURI(trk(s.audio,BASES[0]))) + "</b> (also in Audio/ and audio/). Check the file names in your repository, then reload."; });
 }
 
-function playOnce(n, onProg, onEnd, onErr){
+function playOnce(n, onProg, onEnd, onErr, tries=0){
   au.onended = au.ontimeupdate = au.onerror = null;
   au.src = trk(n);
-  au.ontimeupdate = () => au.duration && onProg && onProg(au.currentTime/au.duration);
-  au.onended = () => { onProg && onProg(1); onEnd && onEnd(); };
-  au.onerror = () => onErr && onErr();
-  au.play().catch(() => onErr && onErr());
+  au.ontimeupdate = () => au.duration && onProg && onProg(au.currentTime/au.duration, au);
+  au.onended = () => { onProg && onProg(1, au); onEnd && onEnd(); };
+  au.onerror = () => { if(tries < BASES.length-1){ bi = (bi+1) % BASES.length; playOnce(n, onProg, onEnd, onErr, tries+1); } else onErr && onErr(); };
+  au.play().catch(e => { if(e.name === "NotAllowedError") onErr && onErr(); });
 }
 
 function startQuestions(){
   qi = 0; endAt = Date.now() + SETS[si].qs.length*SECONDS_PER_QUESTION*1000;
-  tm.className = ""; clearInterval(tick); tick = setInterval(upd, 250); upd(); question();
+  tm.className = ""; document.getElementById("tl").textContent = "Time left to answer"; clearInterval(tick); tick = setInterval(upd, 250); upd(); question();
 }
 function upd(){
   const left = Math.max(0, Math.ceil((endAt-Date.now())/1000));
